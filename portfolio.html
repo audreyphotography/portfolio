@@ -68,7 +68,7 @@
   </section>
 
   <script>
-    fetch('imagesJsonFile.json')
+    fetch('imagesJsonFile.json?cache=' + Date.now())
       .then(response => response.json())
       .then(images => {
         const gallery = document.getElementById('gallery');
