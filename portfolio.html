@@ -11,6 +11,11 @@
       margin: 0;
       background-color: #f9f6f0;
       color: #3c3c3c;
+      opacity: 0;
+      transition: opacity 0.5s ease-in;
+    }
+    .fade-in {
+    opacity: 1;
     }
     .navbar, .portfolio-section h2 {
       text-align: center;
@@ -84,6 +89,12 @@
       })
       .catch(error => console.error('Error loading images:', error));
   </script>
+
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+    document.body.classList.add('fade-in');
+  });
+</script>
 
 </body>
 </html>

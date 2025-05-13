@@ -14,6 +14,11 @@
       margin: 0;
       background-color: #f9f6f0;
       color: #3c3c3c;
+      opacity: 0;
+      transition: opacity 0.5s ease-in;
+    }
+    .fade-in {
+    opacity: 1;
     }
     .top-banner {
       background: #fad9c4;
@@ -100,5 +105,12 @@
       <button>Read More</button>
     </div>
   </section>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      document.body.classList.add('fade-in');
+    });
+  </script>
+  
 </body>
 </html>
