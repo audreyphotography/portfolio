@@ -6,6 +6,9 @@
   <title>Portfolio – Audrey Gundacker Photography</title>
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Lora&display=swap" rel="stylesheet">
   <style>
+    html {
+      scroll-behavior: smooth;
+    }
     body {
       font-family: 'Lora', serif;
       margin: 0;
@@ -15,19 +18,33 @@
       transition: opacity 0.5s ease-in;
     }
     .fade-in {
-    opacity: 1;
-    }
-    .navbar, .portfolio-section h2 {
-      text-align: center;
+      opacity: 1;
     }
     .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       background-color: #a0b49c;
-      padding: 1rem;
+      padding: 1rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    .navbar .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: white;
+    }
+    .navbar ul {
+      list-style: none;
+      display: flex;
+      gap: 1rem;
+      margin: 0;
+      padding: 0;
     }
     .navbar a {
-      color: white;
-      margin: 0 1rem;
       text-decoration: none;
+      color: white;
       font-weight: bold;
     }
     .portfolio-section {
@@ -60,10 +77,14 @@
 </head>
 <body>
 
-  <div class="navbar">
-    <a href="index.html">Home</a>
-    <a href="contact.html">Contact</a>
-  </div>
+  <nav class="navbar">
+    <div class="logo">Audrey <span>Gundacker Photography</span></div>
+    <ul>
+      <li><a href="index.html">About Me</a></li>
+      <li><a href="portfolio.html">Portfolio</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
 
   <section class="portfolio-section">
     <h2>Portfolio</h2>
@@ -90,11 +111,11 @@
       .catch(error => console.error('Error loading images:', error));
   </script>
 
-<script>
-  window.addEventListener('DOMContentLoaded', () => {
-    document.body.classList.add('fade-in');
-  });
-</script>
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      document.body.classList.add('fade-in');
+    });
+  </script>
 
 </body>
 </html>
