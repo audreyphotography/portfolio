@@ -1,17 +1,62 @@
 [
-  "images/Image1.jpg",
-  "images/Image2.JPG",
-  "images/Image3.jpg",
-  "images/Image4.png",
-  "images/Image5.png",
-  "images/Image6.png",
-  "images/Image7.JPG",
-  "images/Image8.JPG",
-  "images/Image9.JPG",
-  "images/Image10.JPG",
-  "images/Image11.JPG",
-  "images/Image12.JPG",
-  "images/Image13.JPG",
-  "images/Image14.jpg",
-  "images/Image15.JPG"
+  {
+    "src": "images/Image1.jpg",
+    "category": "Sports"
+  },
+  {
+    "src": "images/Image2.JPG",
+    "category": "Sports"
+  },
+  {
+    "src": "images/Image3.jpg",
+    "category": "Nature"
+  },
+  {
+    "src": "images/Image4.png",
+    "category": "Nature"
+  },
+  {
+    "src": "images/Image5.png",
+    "category": "Wildlife"
+  },
+  {
+    "src": "images/Image6.png",
+    "category": "Wildlife"
+  },
+  {
+    "src": "images/Image7.JPG",
+    "category": "Misc"
+  },
+  {
+    "src": "images/Image8.JPG",
+    "category": "Misc"
+  },
+  {
+    "src": "images/Image9.JPG",
+    "category": "Sports"
+  },
+  {
+    "src": "images/Image10.JPG",
+    "category": "Sports"
+  },
+  {
+    "src": "images/Image11.JPG",
+    "category": "Wildlife"
+  },
+  {
+    "src": "images/Image12.JPG",
+    "category": "Wildlife"
+  },
+  {
+    "src": "images/Image13.JPG",
+    "category": "Nature"
+  },
+  {
+    "src": "images/Image14.jpg",
+    "category": "Nature"
+  },
+  {
+    "src": "images/Image15.JPG",
+    "category": "Misc"
+  }
 ]

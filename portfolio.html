@@ -20,6 +20,8 @@
     .fade-in {
       opacity: 1;
     }
+
+    /* Navbar */
     .navbar {
       display: flex;
       justify-content: space-between;
@@ -47,6 +49,28 @@
       color: white;
       font-weight: bold;
     }
+
+    /* Category Dropdown */
+    .category-filter {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .category-filter select {
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      font-family: 'Lora', serif;
+      background-color: #f9f6f0;
+      border: 2px solid #a0b49c;
+      border-radius: 5px;
+      color: #3c3c3c;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+    .category-filter select:focus {
+      border-color: #fad9c4;
+    }
+
+    /* Portfolio Section */
     .portfolio-section {
       padding: 2rem;
     }
@@ -56,6 +80,8 @@
       gap: 1.5rem;
       padding-top: 2rem;
     }
+
+    /* Image styling */
     .portfolio-grid img {
       width: 100%;
       height: 100%;
@@ -63,20 +89,26 @@
       border-radius: 0.5rem;
       opacity: 0;
       transform: scale(0.95);
-      transition: opacity 0.8s ease, transform 0.8s ease, box-shadow 0.4s ease;
-    }
-    .portfolio-grid img:hover {
-      transform: scale(1.05);
-      box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
+      transition: opacity 0.5s ease, transform 0.5s ease, box-shadow 0.4s ease;
     }
     .portfolio-grid img.visible {
       opacity: 1;
       transform: scale(1);
     }
+    .portfolio-grid img:hover {
+      transform: scale(1.05);
+      box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
+    }
+    .portfolio-grid img.fade-out {
+      opacity: 0;
+      transform: scale(0.9);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
   </style>
 </head>
 <body>
 
+  <!-- Navbar -->
   <nav class="navbar">
     <div class="logo">Audrey <span>Gundacker Photography</span></div>
     <ul>
@@ -86,26 +118,65 @@
     </ul>
   </nav>
 
+  <!-- Portfolio Section -->
   <section class="portfolio-section">
-    <h2>Portfolio</h2>
+    <h2 style="text-align:center;">Portfolio</h2>
+
+    <div class="category-filter">
+      <label for="category-select"><strong>Filter by Category:</strong></label>
+      <select id="category-select">
+        <option value="All">All</option>
+        <option value="Sports">Sports</option>
+        <option value="Nature">Nature</option>
+        <option value="Wildlife">Wildlife</option>
+        <option value="Misc">Misc</option>
+      </select>
+    </div>
+
     <div class="portfolio-grid" id="gallery">
       <!-- Images will be injected here -->
     </div>
   </section>
 
+  <!-- Scripts -->
   <script>
-    fetch('imagesJsonFile.json?cache=' + Date.now())
-      .then(response => response.json())
-      .then(images => {
-        const gallery = document.getElementById('gallery');
-        images.forEach(src => {
+    let allImages = [];
+
+    function renderImages(images) {
+      const gallery = document.getElementById('gallery');
+
+      // Fade out current images
+      const currentImages = Array.from(gallery.querySelectorAll('img'));
+      currentImages.forEach(img => {
+        img.classList.remove('visible');
+        img.classList.add('fade-out');
+      });
+
+      // Wait for fade out, then replace
+      setTimeout(() => {
+        gallery.innerHTML = '';
+        images.forEach(({ src }) => {
           const img = document.createElement('img');
           img.src = src;
           img.alt = "Portfolio Image";
-          img.onload = () => {
-            img.classList.add('visible');
-          };
+          img.onload = () => img.classList.add('visible');
           gallery.appendChild(img);
+        });
+      }, 200);
+    }
+
+    fetch('imagesJsonFile.json?cache=' + Date.now())
+      .then(response => response.json())
+      .then(data => {
+        allImages = data;
+        renderImages(allImages);
+
+        document.getElementById('category-select').addEventListener('change', (e) => {
+          const selected = e.target.value;
+          const filtered = selected === "All"
+            ? allImages
+            : allImages.filter(img => img.category === selected);
+          renderImages(filtered);
         });
       })
       .catch(error => console.error('Error loading images:', error));
