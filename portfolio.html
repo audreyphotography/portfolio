@@ -129,10 +129,13 @@
 
   <script>
     let allImages = [];
+    let renderTimeout = null;
 
     function renderImages(images, category = "All") {
       const gallery = document.getElementById('gallery');
       document.getElementById('active-category-title').textContent = `Current Category: ${category}`;
+
+      if (renderTimeout) clearTimeout(renderTimeout);
 
       const currentImages = Array.from(gallery.querySelectorAll('img'));
       currentImages.forEach(img => {
@@ -140,14 +143,18 @@
         img.classList.add('fade-out');
       });
 
-      setTimeout(() => {
+      renderTimeout = setTimeout(() => {
         gallery.innerHTML = '';
+        const uniqueSrcs = new Set();
         images.forEach(({ src }) => {
-          const img = document.createElement('img');
-          img.src = src;
-          img.alt = "Portfolio Image";
-          img.onload = () => img.classList.add('visible');
-          gallery.appendChild(img);
+          if (!uniqueSrcs.has(src)) {
+            uniqueSrcs.add(src);
+            const img = document.createElement('img');
+            img.src = src;
+            img.alt = "Portfolio Image";
+            img.onload = () => img.classList.add('visible');
+            gallery.appendChild(img);
+          }
         });
       }, 200);
     }
