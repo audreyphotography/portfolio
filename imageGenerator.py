@@ -1,28 +1,29 @@
 import os
 import json
-import re
 
-# Folder where your images live
-image_folder = "images"
+# Root folder where your categorized folders live
+image_root = "images"
 output_json = "imagesJsonFile.json"
 
-# Valid extensions
-valid_extensions = {".jpg", ".jpeg", ".png", ".gif", ".JPG", ".JPEG", ".PNG", ".GIF"}
+# Accepted image extensions (case-insensitive)
+valid_extensions = {".jpg", ".jpeg", ".png", ".gif"}
 
-# Function to extract the numeric part of the filename
-def extract_index(filename):
-    match = re.search(r'(\d+)', filename)
-    return int(match.group(1)) if match else float('inf')  # Push unnumbered files to the end
+# Build list of image data
+image_data = []
 
-# Get and sort image files by numeric index
-image_files = [f for f in os.listdir(image_folder) if os.path.splitext(f)[1] in valid_extensions]
-sorted_files = sorted(image_files, key=extract_index)
+for category in os.listdir(image_root):
+    category_path = os.path.join(image_root, category)
+    if os.path.isdir(category_path):
+        for filename in os.listdir(category_path):
+            ext = os.path.splitext(filename)[1].lower()
+            if ext in valid_extensions:
+                image_data.append({
+                    "src": f"{image_root}/{category}/{filename}",
+                    "category": category
+                })
 
-# Create relative paths
-image_paths = [f"{image_folder}/{filename}" for filename in sorted_files]
-
-# Save to JSON
+# Save the data to a JSON file
 with open(output_json, "w") as f:
-    json.dump(image_paths, f, indent=2)
+    json.dump(image_data, f, indent=2)
 
-print(f"✅ Successfully created {output_json} with {len(image_paths)} images sorted by index.")
+print(f"✅ Created {output_json} with {len(image_data)} entries.")
