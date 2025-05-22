@@ -1,28 +1,32 @@
 import os
 import json
 
-# Root folder where your categorized folders live
+# Root image folder
 image_root = "images"
 output_json = "imagesJsonFile.json"
 
-# Accepted image extensions (case-insensitive)
-valid_extensions = {".jpg", ".jpeg", ".png", ".gif"}
+# Supported extensions (case-insensitive)
+valid_extensions = {".jpg", ".jpeg", ".png", ".gif", ".JPG", ".JPEG", ".PDF"}
 
-# Build list of image data
+# Collected image data
 image_data = []
 
 for category in os.listdir(image_root):
     category_path = os.path.join(image_root, category)
     if os.path.isdir(category_path):
         for filename in os.listdir(category_path):
-            ext = os.path.splitext(filename)[1].lower()
+            # Remove leading ._ if present
+            clean_name = filename
+            if filename.startswith("._"):
+                clean_name = filename[2:]
+            ext = os.path.splitext(clean_name)[1].lower()
             if ext in valid_extensions:
                 image_data.append({
-                    "src": f"{image_root}/{category}/{filename}",
+                    "src": f"{image_root}/{category}/{clean_name}",
                     "category": category
                 })
 
-# Save the data to a JSON file
+# Save to JSON
 with open(output_json, "w") as f:
     json.dump(image_data, f, indent=2)
 
