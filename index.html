@@ -117,5 +117,78 @@
     });
   </script>
   
+
+<script>
+let allImages = [];
+let currentPage = 1;
+let imagesPerPage = 10;
+let currentCategory = "All";
+
+function updateGallery() {
+  const gallery = document.getElementById('gallery');
+  const pageIndicator = document.getElementById('pageIndicator');
+  const start = (currentPage - 1) * imagesPerPage;
+  const filtered = currentCategory === "All"
+    ? allImages
+    : allImages.filter(img => img.category === currentCategory);
+
+  const pageImages = filtered.slice(start, start + imagesPerPage);
+
+  gallery.innerHTML = '';
+  pageImages.forEach(({ src }) => {
+    const img = document.createElement('img');
+    img.src = src;
+    img.alt = "Portfolio Image";
+    img.onload = () => img.classList.add('visible');
+    gallery.appendChild(img);
+  });
+
+  const totalPages = Math.ceil(filtered.length / imagesPerPage);
+  pageIndicator.textContent = `Page ${currentPage} of ${totalPages}`;
+
+  document.getElementById('prevPageBtn').disabled = currentPage === 1;
+  document.getElementById('nextPageBtn').disabled = currentPage === totalPages;
+}
+
+fetch('imagesJsonFile.json?cache=' + Date.now())
+  .then(res => res.json())
+  .then(data => {
+    allImages = data;
+    const categories = [...new Set(allImages.map(i => i.category))].sort();
+    const select = document.getElementById('category-select');
+
+    select.innerHTML = '<option value="All">All</option>' +
+      categories.map(c => `<option value="${c}">${c}</option>`).join('');
+
+    document.getElementById('active-category-title').textContent = `Current Category: All`;
+    updateGallery();
+
+    select.addEventListener('change', e => {
+      currentCategory = e.target.value;
+      document.getElementById('active-category-title').textContent = `Current Category: ${currentCategory}`;
+      currentPage = 1;
+      updateGallery();
+    });
+
+    document.getElementById('prevPageBtn').addEventListener('click', () => {
+      if (currentPage > 1) {
+        currentPage--;
+        updateGallery();
+      }
+    });
+
+    document.getElementById('nextPageBtn').addEventListener('click', () => {
+      const filtered = currentCategory === "All"
+        ? allImages
+        : allImages.filter(img => img.category === currentCategory);
+      if (currentPage < Math.ceil(filtered.length / imagesPerPage)) {
+        currentPage++;
+        updateGallery();
+      }
+    });
+  })
+  .catch(err => console.error("Image JSON loading error:", err));
+</script>
+
 </body>
 </html>
