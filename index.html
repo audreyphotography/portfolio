@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Full Frame Scroll Website</title>
+  <title>Audrey Gundacker - Photography</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -22,7 +22,8 @@
         <h1>About Me</h1>
         <img src="MeImage.jpg" alt="Me" class="about-image">
         <p>Hi, I’m Audrey, a photographer currently finishing my senior year at the University of Connecticut, where I’m earning a dual degree in Fine Arts and Ecology & Evolutionary Biology. While I specialize in wildlife and nature photography, I also enjoy capturing a wide range of subjects including events, portraits, and sporting events, bringing the same attention and care to each project I work on.</p>
-        <p>In my personal work, I often experiment with older film and digital cameras, allowing each piece of equipment to bring its own unique character to the images I create. Through my photography, I aim to inspire curiosity, connection, and a deeper appreciation for both people and the world around us.</p>      </div>
+        <p>In my personal work, I often experiment with older film and digital cameras, allowing each piece of equipment to bring its own unique character to the images I create. Through my photography, I aim to inspire curiosity, connection, and a deeper appreciation for both people and the world around us.</p>
+     </div>
     </section>
 
     <section id="portfolio" class="frame">
@@ -79,23 +80,16 @@
   let currentCategory = null;
   let currentPage = 1;
   const imagesPerPage = 12;
+  let renderTimeout;
 
   fetch('imagesJsonFile.json')
     .then(res => res.json())
     .then(data => {
       imageData.push(...data);
-      preloadImages(data);
       const categories = [...new Set(data.map(img => img.category))];
       renderCategoryButtons(categories);
       if (categories.length) selectCategory(categories[0]);
     });
-
-  function preloadImages(data) {
-    data.forEach(img => {
-      const preload = new Image();
-      preload.src = img.src;
-    });
-  }
 
   function renderCategoryButtons(categories) {
     const nav = document.querySelector('.portfolio-nav');
@@ -122,25 +116,31 @@
   }
 
   function renderImages() {
-    const container = document.getElementById('image-grid');
-    const filtered = imageData.filter(img => img.category === currentCategory);
-    const start = (currentPage - 1) * imagesPerPage;
-    const end = start + imagesPerPage;
-    const pagedImages = filtered.slice(start, end);
+    clearTimeout(renderTimeout);
+    renderTimeout = setTimeout(() => {
+      const container = document.getElementById('image-grid');
+      const filtered = imageData.filter(img => img.category === currentCategory);
+      const start = (currentPage - 1) * imagesPerPage;
+      const end = start + imagesPerPage;
+      const pagedImages = filtered.slice(start, end);
 
-    container.innerHTML = '';
-    pagedImages.forEach(img => {
-      const image = document.createElement('img');
-      image.src = img.src;
-      image.alt = '';
-      image.addEventListener('click', () => showModal(img.src));
-      container.appendChild(image);
-    });
+      container.innerHTML = '';
+      pagedImages.forEach(img => {
+        const image = document.createElement('img');
+        image.loading = 'lazy';
+        image.src = img.thumbSrc || img.src;
+        image.alt = '';
+        image.width = 300;
+        image.height = 200;
+        image.addEventListener('click', () => showModal(img.src));
+        container.appendChild(image);
+      });
 
-    document.getElementById('pageIndicator').textContent =
-      `Page ${currentPage} of ${Math.ceil(filtered.length / imagesPerPage)}`;
-    document.getElementById('prevPage').disabled = currentPage === 1;
-    document.getElementById('nextPage').disabled = end >= filtered.length;
+      document.getElementById('pageIndicator').textContent =
+        `Page ${currentPage} of ${Math.ceil(filtered.length / imagesPerPage)}`;
+      document.getElementById('prevPage').disabled = currentPage === 1;
+      document.getElementById('nextPage').disabled = end >= filtered.length;
+    }, 30);
   }
 
   document.getElementById('prevPage').addEventListener('click', () => {
