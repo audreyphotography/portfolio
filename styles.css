@@ -118,63 +118,66 @@ html {
   box-shadow: 0 0 10px rgba(0,0,0,0.3);
 }
 
-
-
-.portfolio-wrapper {
-  width: 100%;
-  text-align: center;
-}
-
-.category-filter {
-  margin-bottom: 1rem;
-}
-
-.category-filter select {
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
-  background-color: #f9f6f0;
-  border: 2px solid #a0b49c;
-  border-radius: 5px;
-  color: #3c3c3c;
-}
-
-.portfolio-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1.5rem;
-  margin-top: 2rem;
-}
-
-.portfolio-grid img {
-  width: 100%;
-  border-radius: 10px;
-  opacity: 0;
-  transform: scale(0.95);
-  transition: opacity 0.5s ease, transform 0.5s ease;
-}
-.portfolio-grid img.visible {
-  opacity: 1;
-  transform: scale(1);
-}
-.portfolio-grid img:hover {
-  transform: scale(1.05);
-  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
-}
-
-.pagination-controls {
-  margin-top: 20px;
+.portfolio-container {
   display: flex;
-  justify-content: center;
-  gap: 1rem;
+  flex-direction: column;
   align-items: center;
+  gap: 1rem;
 }
 
-.pagination-controls button {
+.portfolio-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.portfolio-nav button {
+  padding: 8px 16px;
   background-color: #a0b49c;
   color: white;
   border: none;
-  padding: 0.5rem 1rem;
-  font-weight: bold;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.portfolio-nav button.active,
+.portfolio-nav button:hover {
+  background-color: #8a9f7e;
+}
+
+.portfolio-images {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 15px;
+  width: 100%;
+}
+
+.portfolio-images img {
+  width: 100%;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
+
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 10px;
+}
+
+.pagination-controls button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  background-color: #ccc;
+  cursor: pointer;
+}
+
+.pagination-controls button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }

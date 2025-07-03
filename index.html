@@ -1,194 +1,177 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cottagecore Portfolio</title>
-  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Lora&display=swap" rel="stylesheet">
-  <style>
-    html {
-      scroll-behavior: smooth;
-    }
-    body {
-      font-family: 'Lora', serif;
-      margin: 0;
-      background-color: #f9f6f0;
-      color: #3c3c3c;
-      opacity: 0;
-      transition: opacity 0.5s ease-in;
-    }
-    .fade-in {
-    opacity: 1;
-    }
-    .top-banner {
-      background: #fad9c4;
-      text-align: center;
-      padding: 0.5rem;
-      font-size: 0.9rem;
-    }
-    .navbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background-color: #a0b49c;
-      padding: 1rem 2rem;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-    }
-    .navbar .logo {
-      font-size: 1.5rem;
-      font-weight: bold;
-      color: white;
-    }
-    .navbar ul {
-      list-style: none;
-      display: flex;
-      gap: 1rem;
-      margin: 0;
-      padding: 0;
-    }
-    .navbar a {
-      text-decoration: none;
-      color: white;
-      font-weight: bold;
-    }
-    section {
-      padding: 3rem 2rem;
-    }
-    .hero {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-    .hero img {
-      max-width: 100%;
-      border-radius: 1rem;
-      flex: 1;
-    }
-    .hero-text {
-      flex: 1;
-      margin-left: 2rem;
-    }
-    .hero-text h1 {
-      font-family: 'Great Vibes', cursive;
-      font-size: 3rem;
-      margin: 0.5rem 0;
-    }
-    .hero-text p {
-      font-family: 'Lora', serif;
-      font-size: 1.1rem;
-      line-height: 1.6;
-    }
-    .hero-text button {
-      background-color: #a0b49c;
-      color: white;
-      padding: 0.5rem 1rem;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-  </style>
+  <meta charset="UTF-8">
+  <title>Full Frame Scroll Website</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <!--<header class="top-banner">ANNOUNCEMENT HERE!!! YIPPE!!!</header>-->
-  <nav class="navbar">
-    <div class="logo">Audrey <span>Gundacker Photography</span></div>
-    <ul>
-      <li><a href="#about">About Me</a></li>
-      <li><a href="portfolio.html">Portfolio</a></li>
-      <li><a href="contact.html">Contact</a></li>
-    </ul>
-  </nav>
 
-  <section class="hero" id="about">
-    <img src="your-image.jpg" alt="Aesthetic setup">
-    <div class="hero-text">
-      <!--<p>Welcome to my world of visuals</p> -->
-      <h1>About Me</h1>
-      <p>I TALK ABOUT MYSELF HERE</p>
-      <!-- <button>Read More</button>-->
+  <!-- Navigation -->
+  <div class="navbar">
+    <!--<a href="#home">Home</a>-->
+    <ul>
+      <li><a href="#" data-target="about">About Me</a></li>
+      <li><a href="#" data-target="portfolio">Portfolio</a></li>
+      <li><a href="#" data-target="contact">Contact</a></li>
+    </ul>
+  </div>
+
+  <!-- Full screen sections -->
+  <div class="scroll-container">
+    <!--
+        <section id="home" class="frame">
+      <div class="frame-content">
+        <h1>Home</h1>
+        <p>Welcome to my portfolio!</p>
+      </div>
+    </section>
+    -->
+
+    <section id="about" class="frame">
+      <div class="frame-content">
+        <h1>About Me</h1>
+        <img src="MeImage.jpg" alt="Me" class="about-image">
+        <p>Hi, I’m Audrey, a photographer currently finishing my senior year at the University of Connecticut, where I’m earning a dual degree in Fine Arts and Ecology & Evolutionary Biology. While I specialize in wildlife and nature photography, I also enjoy capturing a wide range of subjects including events, portraits, and sporting events, bringing the same attention and care to each project I work on.</p>
+        <p>In my personal work, I often experiment with older film and digital cameras, allowing each piece of equipment to bring its own unique character to the images I create. Through my photography, I aim to inspire curiosity, connection, and a deeper appreciation for both people and the world around us.</p>
+     </div>
+    </section>
+
+
+    <section id="portfolio" class="frame">
+      <div class="frame-content portfolio-container">
+        <h1>Portfolio</h1>
+
+        <div class="portfolio-nav">
+          <!-- Categories will be inserted here dynamically -->
+        </div>
+
+        <div id="image-grid" class="portfolio-images">
+          <!-- Images will be inserted here dynamically -->
+        </div>
+
+        <div class="pagination-controls">
+          <button id="prevPage" disabled>&laquo; Prev</button>
+          <span id="pageIndicator">Page 1</span>
+          <button id="nextPage">Next &raquo;</button>
+        </div>
     </div>
   </section>
 
-  <script>
-    window.addEventListener('DOMContentLoaded', () => {
-      document.body.classList.add('fade-in');
-    });
-  </script>
-  
 
-<script>
-let allImages = [];
-let currentPage = 1;
-let imagesPerPage = 10;
-let currentCategory = "All";
+    <section id="contact" class="frame">
+      <div class="frame-content">
+        <h1>Contact Me</h1>
+        <p>Contact me for any information about bookings, gigs, and so on.</p>
 
-function updateGallery() {
-  const gallery = document.getElementById('gallery');
-  const pageIndicator = document.getElementById('pageIndicator');
-  const start = (currentPage - 1) * imagesPerPage;
-  const filtered = currentCategory === "All"
-    ? allImages
-    : allImages.filter(img => img.category === currentCategory);
+      <div class="contact-info">
 
-  const pageImages = filtered.slice(start, start + imagesPerPage);
+      <div class="instagram">
+        <img src="info/instagramIcon.png" alt="Instagram" class="social-icon">
+        <a href="https://www.instagram.com/audreyg_photography" target="_blank">Instagram</a>
+      </div>
 
-  gallery.innerHTML = '';
-  pageImages.forEach(({ src }) => {
-    const img = document.createElement('img');
-    img.src = src;
-    img.alt = "Portfolio Image";
-    img.onload = () => img.classList.add('visible');
-    gallery.appendChild(img);
-  });
+      <p>Email: audrey.gundacker@gmail.com</p>
+      <p>Phone: (206)-962-9249</p>
 
-  const totalPages = Math.ceil(filtered.length / imagesPerPage);
-  pageIndicator.textContent = `Page ${currentPage} of ${totalPages}`;
+      </div>
+    </div>
+  </section>
 
-  document.getElementById('prevPageBtn').disabled = currentPage === 1;
-  document.getElementById('nextPageBtn').disabled = currentPage === totalPages;
-}
 
-fetch('imagesJsonFile.json?cache=' + Date.now())
-  .then(res => res.json())
-  .then(data => {
-    allImages = data;
-    const categories = [...new Set(allImages.map(i => i.category))].sort();
-    const select = document.getElementById('category-select');
-
-    select.innerHTML = '<option value="All">All</option>' +
-      categories.map(c => `<option value="${c}">${c}</option>`).join('');
-
-    document.getElementById('active-category-title').textContent = `Current Category: All`;
-    updateGallery();
-
-    select.addEventListener('change', e => {
-      currentCategory = e.target.value;
-      document.getElementById('active-category-title').textContent = `Current Category: ${currentCategory}`;
-      currentPage = 1;
-      updateGallery();
-    });
-
-    document.getElementById('prevPageBtn').addEventListener('click', () => {
-      if (currentPage > 1) {
-        currentPage--;
-        updateGallery();
-      }
-    });
-
-    document.getElementById('nextPageBtn').addEventListener('click', () => {
-      const filtered = currentCategory === "All"
-        ? allImages
-        : allImages.filter(img => img.category === currentCategory);
-      if (currentPage < Math.ceil(filtered.length / imagesPerPage)) {
-        currentPage++;
-        updateGallery();
-      }
-    });
-  })
-  .catch(err => console.error("Image JSON loading error:", err));
-</script>
+  </div>
 
 </body>
 </html>
+
+<script>
+  document.querySelectorAll('a[data-target]').forEach(link => {
+    link.addEventListener('click', function (e) {
+      e.preventDefault();
+      const sectionId = this.getAttribute('data-target');
+      const section = document.getElementById(sectionId);
+      if (section) {
+        section.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+</script>
+
+<script>
+const imageData = [];
+let currentCategory = null;
+let currentPage = 1;
+const imagesPerPage = 10;
+
+// Load image data from JSON
+fetch('imagesJsonFile.json')
+  .then(res => res.json())
+  .then(data => {
+    imageData.push(...data);
+    const categories = [...new Set(imageData.map(img => img.category))];
+    renderCategoryButtons(categories);
+    if (categories.length) {
+      selectCategory(categories[0]);
+    }
+  });
+
+function renderCategoryButtons(categories) {
+  const nav = document.querySelector('.portfolio-nav');
+  nav.innerHTML = '';
+  categories.forEach(cat => {
+    const btn = document.createElement('button');
+    btn.textContent = cat;
+    btn.addEventListener('click', () => selectCategory(cat));
+    nav.appendChild(btn);
+  });
+}
+
+function selectCategory(category) {
+  currentCategory = category;
+  currentPage = 1;
+  updateActiveCategory();
+  renderImages();
+}
+
+function updateActiveCategory() {
+  document.querySelectorAll('.portfolio-nav button').forEach(btn => {
+    btn.classList.toggle('active', btn.textContent === currentCategory);
+  });
+}
+
+function renderImages() {
+  const container = document.getElementById('image-grid');
+  const filtered = imageData.filter(img => img.category === currentCategory);
+  const start = (currentPage - 1) * imagesPerPage;
+  const end = start + imagesPerPage;
+  const pagedImages = filtered.slice(start, end);
+
+  container.innerHTML = '';
+  pagedImages.forEach(img => {
+    const image = document.createElement('img');
+    image.src = img.src;
+    image.alt = '';
+    container.appendChild(image);
+  });
+
+  document.getElementById('pageIndicator').textContent =
+    `Page ${currentPage} of ${Math.ceil(filtered.length / imagesPerPage)}`;
+  document.getElementById('prevPage').disabled = currentPage === 1;
+  document.getElementById('nextPage').disabled = end >= filtered.length;
+}
+
+document.getElementById('prevPage').addEventListener('click', () => {
+  if (currentPage > 1) {
+    currentPage--;
+    renderImages();
+  }
+});
+
+document.getElementById('nextPage').addEventListener('click', () => {
+  const filtered = imageData.filter(img => img.category === currentCategory);
+  if ((currentPage * imagesPerPage) < filtered.length) {
+    currentPage++;
+    renderImages();
+  }
+});
+</script>
