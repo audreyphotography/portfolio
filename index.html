@@ -9,7 +9,6 @@
 
   <!-- Navigation -->
   <div class="navbar">
-    <!--<a href="#home">Home</a>-->
     <ul>
       <li><a href="#" data-target="about">About Me</a></li>
       <li><a href="#" data-target="portfolio">Portfolio</a></li>
@@ -17,68 +16,48 @@
     </ul>
   </div>
 
-  <!-- Full screen sections -->
   <div class="scroll-container">
-    <!--
-        <section id="home" class="frame">
-      <div class="frame-content">
-        <h1>Home</h1>
-        <p>Welcome to my portfolio!</p>
-      </div>
-    </section>
-    -->
-
     <section id="about" class="frame">
       <div class="frame-content">
         <h1>About Me</h1>
         <img src="MeImage.jpg" alt="Me" class="about-image">
-        <p>Hi, I’m Audrey, a photographer currently finishing my senior year at the University of Connecticut, where I’m earning a dual degree in Fine Arts and Ecology & Evolutionary Biology. While I specialize in wildlife and nature photography, I also enjoy capturing a wide range of subjects including events, portraits, and sporting events, bringing the same attention and care to each project I work on.</p>
-        <p>In my personal work, I often experiment with older film and digital cameras, allowing each piece of equipment to bring its own unique character to the images I create. Through my photography, I aim to inspire curiosity, connection, and a deeper appreciation for both people and the world around us.</p>
-     </div>
+        <p>Hi, I’m Audrey, a photographer currently finishing my senior year at the University of Connecticut, where I’m earning a dual degree in Fine Arts and Ecology & Evolutionary Biology...</p>
+      </div>
     </section>
-
 
     <section id="portfolio" class="frame">
       <div class="frame-content portfolio-container">
         <h1>Portfolio</h1>
-
-        <div class="portfolio-nav">
-          <!-- Categories will be inserted here dynamically -->
-        </div>
-
-        <div id="image-grid" class="portfolio-images">
-          <!-- Images will be inserted here dynamically -->
-        </div>
-
+        <div class="portfolio-nav"></div>
+        <div id="image-grid" class="portfolio-images"></div>
         <div class="pagination-controls">
           <button id="prevPage" disabled>&laquo; Prev</button>
           <span id="pageIndicator">Page 1</span>
           <button id="nextPage">Next &raquo;</button>
         </div>
-    </div>
-  </section>
-
+      </div>
+    </section>
 
     <section id="contact" class="frame">
       <div class="frame-content">
         <h1>Contact Me</h1>
         <p>Contact me for any information about bookings, gigs, and so on.</p>
-
-      <div class="contact-info">
-
-      <div class="instagram">
-        <img src="info/instagramIcon.png" alt="Instagram" class="social-icon">
-        <a href="https://www.instagram.com/audreyg_photography" target="_blank">Instagram</a>
+        <div class="contact-info">
+          <div class="instagram">
+            <img src="info/instagramIcon.png" alt="Instagram" class="social-icon">
+            <a href="https://www.instagram.com/audreyg_photography" target="_blank">Instagram</a>
+          </div>
+          <p>Email: audrey.gundacker@gmail.com</p>
+          <p>Phone: (206)-962-9249</p>
+        </div>
       </div>
+    </section>
+  </div>
 
-      <p>Email: audrey.gundacker@gmail.com</p>
-      <p>Phone: (206)-962-9249</p>
-
-      </div>
-    </div>
-  </section>
-
-
+  <!-- Modal for full image view -->
+  <div id="imageModal">
+    <span class="close-btn" onclick="closeModal()">&times;</span>
+    <img id="modalImage" src="" alt="Full Image">
   </div>
 
 </body>
@@ -95,83 +74,104 @@
       }
     });
   });
-</script>
 
-<script>
-const imageData = [];
-let currentCategory = null;
-let currentPage = 1;
-const imagesPerPage = 10;
+  const imageData = [];
+  let currentCategory = null;
+  let currentPage = 1;
+  const imagesPerPage = 10;
 
-// Load image data from JSON
-fetch('imagesJsonFile.json')
-  .then(res => res.json())
-  .then(data => {
-    imageData.push(...data);
-    const categories = [...new Set(imageData.map(img => img.category))];
-    renderCategoryButtons(categories);
-    if (categories.length) {
-      selectCategory(categories[0]);
+  fetch('imagesJsonFile.json')
+    .then(res => res.json())
+    .then(data => {
+      imageData.push(...data);
+      preloadImages(data);
+      const categories = [...new Set(data.map(img => img.category))];
+      renderCategoryButtons(categories);
+      if (categories.length) selectCategory(categories[0]);
+    });
+
+  function preloadImages(data) {
+    data.forEach(img => {
+      const preload = new Image();
+      preload.src = img.src;
+    });
+  }
+
+  function renderCategoryButtons(categories) {
+    const nav = document.querySelector('.portfolio-nav');
+    nav.innerHTML = '';
+    categories.forEach(cat => {
+      const btn = document.createElement('button');
+      btn.textContent = cat;
+      btn.addEventListener('click', () => selectCategory(cat));
+      nav.appendChild(btn);
+    });
+  }
+
+  function selectCategory(category) {
+    currentCategory = category;
+    currentPage = 1;
+    updateActiveCategory();
+    renderImages();
+  }
+
+  function updateActiveCategory() {
+    document.querySelectorAll('.portfolio-nav button').forEach(btn => {
+      btn.classList.toggle('active', btn.textContent === currentCategory);
+    });
+  }
+
+  function renderImages() {
+    const container = document.getElementById('image-grid');
+    const filtered = imageData.filter(img => img.category === currentCategory);
+    const start = (currentPage - 1) * imagesPerPage;
+    const end = start + imagesPerPage;
+    const pagedImages = filtered.slice(start, end);
+
+    container.innerHTML = '';
+    pagedImages.forEach(img => {
+      const image = document.createElement('img');
+      image.src = img.src;
+      image.alt = '';
+      image.addEventListener('click', () => showModal(img.src));
+      container.appendChild(image);
+    });
+
+    document.getElementById('pageIndicator').textContent =
+      `Page ${currentPage} of ${Math.ceil(filtered.length / imagesPerPage)}`;
+    document.getElementById('prevPage').disabled = currentPage === 1;
+    document.getElementById('nextPage').disabled = end >= filtered.length;
+  }
+
+  document.getElementById('prevPage').addEventListener('click', () => {
+    if (currentPage > 1) {
+      currentPage--;
+      renderImages();
     }
   });
 
-function renderCategoryButtons(categories) {
-  const nav = document.querySelector('.portfolio-nav');
-  nav.innerHTML = '';
-  categories.forEach(cat => {
-    const btn = document.createElement('button');
-    btn.textContent = cat;
-    btn.addEventListener('click', () => selectCategory(cat));
-    nav.appendChild(btn);
-  });
-}
-
-function selectCategory(category) {
-  currentCategory = category;
-  currentPage = 1;
-  updateActiveCategory();
-  renderImages();
-}
-
-function updateActiveCategory() {
-  document.querySelectorAll('.portfolio-nav button').forEach(btn => {
-    btn.classList.toggle('active', btn.textContent === currentCategory);
-  });
-}
-
-function renderImages() {
-  const container = document.getElementById('image-grid');
-  const filtered = imageData.filter(img => img.category === currentCategory);
-  const start = (currentPage - 1) * imagesPerPage;
-  const end = start + imagesPerPage;
-  const pagedImages = filtered.slice(start, end);
-
-  container.innerHTML = '';
-  pagedImages.forEach(img => {
-    const image = document.createElement('img');
-    image.src = img.src;
-    image.alt = '';
-    container.appendChild(image);
+  document.getElementById('nextPage').addEventListener('click', () => {
+    const filtered = imageData.filter(img => img.category === currentCategory);
+    if ((currentPage * imagesPerPage) < filtered.length) {
+      currentPage++;
+      renderImages();
+    }
   });
 
-  document.getElementById('pageIndicator').textContent =
-    `Page ${currentPage} of ${Math.ceil(filtered.length / imagesPerPage)}`;
-  document.getElementById('prevPage').disabled = currentPage === 1;
-  document.getElementById('nextPage').disabled = end >= filtered.length;
-}
-
-document.getElementById('prevPage').addEventListener('click', () => {
-  if (currentPage > 1) {
-    currentPage--;
-    renderImages();
+  function showModal(src) {
+    const modal = document.getElementById('imageModal');
+    const modalImg = document.getElementById('modalImage');
+    modal.style.display = 'flex';
+    modalImg.src = src;
   }
-});
 
-document.getElementById('nextPage').addEventListener('click', () => {
-  const filtered = imageData.filter(img => img.category === currentCategory);
-  if ((currentPage * imagesPerPage) < filtered.length) {
-    currentPage++;
-    renderImages();
+  function closeModal() {
+    const modal = document.getElementById('imageModal');
+    modal.style.display = 'none';
+    document.getElementById('modalImage').src = '';
   }
-});
+
+  document.getElementById('imageModal').addEventListener('click', (e) => {
+    if (e.target.id === 'imageModal') closeModal();
+  });
 </script>
